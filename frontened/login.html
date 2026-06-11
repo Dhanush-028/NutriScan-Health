@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — Healthy Food Analysis System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-deep: #1a3a2a;
+      --green-mid: #2d6a4f;
+      --green-bright: #40916c;
+      --green-light: #74c69d;
+      --green-pale: #b7e4c7;
+      --cream: #f8f5ee;
+      --cream-dark: #ede8dc;
+      --accent: #f4a261;
+      --error: #e63946;
+      --success: #2d6a4f;
+      --text-dark: #1a1a1a;
+      --text-mid: #4a4a4a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      background: var(--cream);
+    }
+    .left-panel {
+      width: 45%;
+      background: var(--green-deep);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(64,145,108,0.3) 0%, transparent 70%);
+    }
+    .left-panel::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(116,198,157,0.15) 0%, transparent 70%);
+    }
+    .panel-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: white; margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 10px;
+      position: relative; z-index: 1;
+      text-decoration: none;
+    }
+    .panel-logo .icon {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .panel-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem; line-height: 1.15;
+      color: white; margin-bottom: 1.2rem;
+      position: relative; z-index: 1;
+    }
+    .panel-heading em { color: var(--green-light); font-style: normal; }
+    .panel-desc {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.95rem; line-height: 1.7;
+      max-width: 320px;
+      position: relative; z-index: 1;
+      margin-bottom: 2.5rem;
+    }
+    .panel-perks { list-style: none; position: relative; z-index: 1; }
+    .panel-perks li {
+      display: flex; align-items: center; gap: 10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.88rem; margin-bottom: 0.9rem;
+    }
+    .panel-perks li .check {
+      width: 22px; height: 22px;
+      background: rgba(116,198,157,0.25);
+      border: 1px solid var(--green-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--green-light);
+      flex-shrink: 0;
+    }
+    .right-panel {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 4rem;
+    }
+    .form-box { width: 100%; max-width: 420px; }
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; color: var(--green-deep);
+      margin-bottom: 0.4rem;
+    }
+    .form-subtitle {
+      font-size: 0.9rem; color: var(--text-mid);
+      margin-bottom: 2.5rem;
+    }
+    .form-subtitle a { color: var(--green-mid); text-decoration: none; font-weight: 600; }
+    .form-subtitle a:hover { text-decoration: underline; }
+    .form-group { margin-bottom: 1.4rem; }
+    label {
+      display: block;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--green-deep); margin-bottom: 0.5rem;
+    }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-wrap .input-icon {
+      position: absolute; left: 14px;
+      font-size: 1rem; opacity: 0.5; pointer-events: none;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 0.82rem 1rem 0.82rem 2.8rem;
+      border: 1.5px solid #dde8e4;
+      border-radius: 12px;
+      font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+      background: white; color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 4px rgba(45,106,79,0.1);
+    }
+    input.error { border-color: var(--error); }
+    input.error:focus { box-shadow: 0 0 0 4px rgba(230,57,70,0.1); }
+    .password-toggle {
+      position: absolute; right: 14px;
+      background: none; border: none;
+      cursor: pointer; font-size: 1rem;
+      opacity: 0.5; transition: opacity 0.2s; padding: 0;
+    }
+    .password-toggle:hover { opacity: 1; }
+    .msg {
+      display: none;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      margin-bottom: 1.2rem;
+      align-items: center; gap: 8px;
+    }
+    .msg.error-msg {
+      background: rgba(230,57,70,0.08);
+      border: 1px solid rgba(230,57,70,0.25);
+      color: var(--error);
+    }
+    .msg.success-msg {
+      background: rgba(45,106,79,0.08);
+      border: 1px solid rgba(45,106,79,0.25);
+      color: var(--success);
+    }
+    .msg.show { display: flex; }
+    .form-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1.5rem;
+    }
+    .checkbox-wrap {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; color: var(--text-mid); cursor: pointer;
+    }
+    .checkbox-wrap input[type="checkbox"] {
+      width: 16px; height: 16px; padding: 0;
+      accent-color: var(--green-mid); cursor: pointer;
+    }
+    .forgot-link {
+      font-size: 0.85rem; color: var(--green-mid);
+      text-decoration: none; font-weight: 500;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+    .btn-submit {
+      width: 100%; padding: 0.9rem;
+      background: var(--green-mid);
+      color: white; border: none;
+      border-radius: 12px;
+      font-size: 1rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 6px 20px rgba(45,106,79,0.25);
+      position: relative; overflow: hidden;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--green-deep);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(45,106,79,0.3);
+    }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .btn-spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .field-msg {
+      font-size: 0.78rem; margin-top: 5px;
+      display: none; padding-left: 4px;
+    }
+    .field-msg.show { display: block; }
+    .field-msg.err { color: var(--error); }
+    .register-link {
+      text-align: center; margin-top: 1.5rem;
+      font-size: 0.88rem; color: var(--text-mid);
+    }
+    .register-link a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+    .register-link a:hover { text-decoration: underline; }
+    @media (max-width: 768px) {
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="index.html" class="panel-logo">
+    <div class="icon">🥗</div>
+    HealthyFood
+  </a>
+  <h2 class="panel-heading">Welcome<br>Back to <em>Health</em></h2>
+  <p class="panel-desc">Sign in to access your personalized nutrition dashboard, meal logs, and health insights.</p>
+  <ul class="panel-perks">
+    <li><span class="check">✓</span> Full nutritional analysis of your meals</li>
+    <li><span class="check">✓</span> Track your daily diet goals</li>
+    <li><span class="check">✓</span> AI-powered food recognition</li>
+    <li><span class="check">✓</span> Personalized health recommendations</li>
+  </ul>
+</div>
+ 
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-box">
+    <h1 class="form-title">Sign In</h1>
+    <p class="form-subtitle">Don't have an account? <a href="register.html">Create one free</a></p>
+ 
+    <div class="msg error-msg" id="errorMsg">
+      <span id="errorIcon">⚠️</span>
+      <span id="errorText">Invalid credentials. Please try again.</span>
+    </div>
+    <div class="msg success-msg" id="successMsg">
+      <span>✅</span>
+      <span id="successText">Login successful! Redirecting…</span>
+    </div>
+ 
+    <div id="loginForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="field-msg err" id="emailError">Please enter a valid email address.</div>
+      </div>
+ 
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+          <button class="password-toggle" type="button" onclick="togglePassword('password', this)" aria-label="Toggle password">👁️</button>
+        </div>
+        <div class="field-msg err" id="passwordError">Password cannot be empty.</div>
+      </div>
+ 
+      <div class="form-row">
+        <label class="checkbox-wrap">
+          <input type="checkbox" id="rememberMe"/>
+          Remember me
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+ 
+      <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+        <span class="btn-text">Sign In →</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </div>
+ 
+    <div class="register-link">
+      New here? <a href="register.html">Create a free account</a>
+    </div>
+  </div>
+</div>
+ 
+<script>
+  // ✅ FIXED: Points to your Java Server.java backend
+  const API_BASE = 'http://localhost:8081';
+ 
+  function togglePassword(fieldId, btn) {
+    const field = document.getElementById(fieldId);
+    if (field.type === 'password') {
+      field.type = 'text'; btn.textContent = '🙈';
+    } else {
+      field.type = 'password'; btn.textContent = '👁️';
+    }
+  }
+ 
+  function showError(message) {
+    document.getElementById('errorText').textContent = message;
+    document.getElementById('errorMsg').classList.add('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+  function showSuccess(message) {
+    document.getElementById('successText').textContent = message;
+    document.getElementById('successMsg').classList.add('show');
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+  function clearMessages() {
+    document.getElementById('errorMsg').classList.remove('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+ 
+  function validate() {
+    let valid = true;
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const emailErr = document.getElementById('emailError');
+    const passErr = document.getElementById('passwordError');
+ 
+    email.classList.remove('error');
+    password.classList.remove('error');
+    emailErr.classList.remove('show');
+    passErr.classList.remove('show');
+ 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) {
+      email.classList.add('error');
+      emailErr.classList.add('show');
+      valid = false;
+    }
+    if (password.value.trim() === '') {
+      password.classList.add('error');
+      passErr.classList.add('show');
+      valid = false;
+    }
+    return valid;
+  }
+ 
+  async function handleLogin() {
+    clearMessages();
+    if (!validate()) return;
+ 
+    const btn = document.getElementById('loginBtn');
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+ 
+    btn.classList.add('loading');
+    btn.disabled = true;
+ 
+    try {
+      // ✅ FIXED: calls /login on your Java server
+      const response = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+ 
+      const data = await response.json();
+ 
+      if (data.success) {
+        // ✅ Store user info
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('userEmail', email);
+        storage.setItem('userName', data.username || email);
+        storage.setItem('userId', data.userId); // ✅ Add this line
+        sessionStorage.setItem('userId', data.userId); // ✅ Always keep in session too
+
+ 
+        showSuccess('Login successful! Redirecting…');
+        // ✅ FIXED: redirects to home.html (which exists in your project)
+        setTimeout(() => { window.location.href = 'home.html'; }, 1200);
+ 
+      } else {
+        showError('❌ ' + (data.message || 'Invalid email or password.'));
+      }
+ 
+    } catch (networkError) {
+      showError('⚠️ Cannot connect to server. Make sure your Java server is running on port 8081.');
+      console.error('Login error:', networkError);
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+ 
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+ 
+  document.getElementById('email').addEventListener('input', () => {
+    document.getElementById('email').classList.remove('error');
+    document.getElementById('emailError').classList.remove('show');
+  });
+  document.getElementById('password').addEventListener('input', () => {
+    document.getElementById('password').classList.remove('error');
+    document.getElementById('passwordError').classList.remove('show');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthy Food Analysis System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-deep: #1a3a2a;
+      --green-mid: #2d6a4f;
+      --green-bright: #40916c;
+      --green-light: #74c69d;
+      --green-pale: #b7e4c7;
+      --cream: #f8f5ee;
+      --cream-dark: #ede8dc;
+      --accent: #f4a261;
+      --text-dark: #1a1a1a;
+      --text-mid: #4a4a4a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 5%;
+      background: rgba(248,245,238,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(64,145,108,0.15);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--green-deep);
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--green-bright); }
+    .nav-logo .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--green-mid);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-mid);
+      font-size: 0.9rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green-mid); }
+    .nav-cta { display: flex; gap: 0.8rem; }
+    .btn-outline {
+      padding: 0.5rem 1.2rem;
+      border: 1.5px solid var(--green-mid);
+      color: var(--green-mid);
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--green-mid); color: white; }
+    .btn-solid {
+      padding: 0.5rem 1.3rem;
+      background: var(--green-mid);
+      color: white;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      transition: all 0.25s;
+    }
+    .btn-solid:hover { background: var(--green-deep); transform: translateY(-1px); }
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 5% 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 40%, rgba(116,198,157,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(45,106,79,0.1) 0%, transparent 60%);
+    }
+    .hero-decor {
+      position: absolute;
+      right: -60px; top: 50%;
+      transform: translateY(-50%);
+      width: 550px; height: 550px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(64,145,108,0.12) 0%, transparent 70%);
+      border: 1px solid rgba(64,145,108,0.12);
+      z-index: 0;
+    }
+    .hero-decor::before {
+      content: '';
+      position: absolute; inset: 40px;
+      border-radius: 50%;
+      border: 1px dashed rgba(64,145,108,0.2);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 620px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(64,145,108,0.12);
+      border: 1px solid rgba(64,145,108,0.25);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.82rem; font-weight: 500;
+      color: var(--green-mid);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px;
+      background: var(--green-bright);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.12;
+      color: var(--green-deep);
+      margin-bottom: 1.4rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 em { font-style: normal; color: var(--green-bright); }
+    .hero-desc {
+      font-size: 1.08rem; line-height: 1.75;
+      color: var(--text-mid); margin-bottom: 2.2rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; align-items: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-hero {
+      padding: 0.85rem 2rem;
+      background: var(--green-mid);
+      color: white; border-radius: 50px;
+      text-decoration: none;
+      font-size: 1rem; font-weight: 600;
+      transition: all 0.25s;
+      box-shadow: 0 8px 24px rgba(45,106,79,0.3);
+    }
+    .btn-hero:hover { background: var(--green-deep); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(45,106,79,0.35); }
+    .btn-ghost {
+      padding: 0.85rem 2rem;
+      color: var(--green-deep);
+      text-decoration: none;
+      font-size: 1rem; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+      transition: gap 0.2s;
+    }
+    .btn-ghost:hover { gap: 10px; }
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; font-weight: 700;
+      color: var(--green-deep);
+    }
+    .stat-label { font-size: 0.82rem; color: var(--text-mid); margin-top: 2px; }
+    /* FLOATING FOOD CIRCLES */
+    .hero-visual {
+      position: absolute; right: 5%; top: 50%;
+      transform: translateY(-50%);
+      width: 420px; height: 420px;
+      z-index: 1;
+    }
+    .food-circle {
+      position: absolute;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      animation: float 4s ease-in-out infinite;
+    }
+    .fc-main {
+      width: 200px; height: 200px;
+      background: var(--green-mid);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      box-shadow: 0 20px 60px rgba(45,106,79,0.35);
+      animation: floatMain 4s ease-in-out infinite;
+    }
+    .fc-1 { width: 90px; height: 90px; background: var(--green-pale); top: 5%; left: 55%; animation-delay: 0.5s; }
+    .fc-2 { width: 75px; height: 75px; background: rgba(244,162,97,0.25); border: 2px solid var(--accent); bottom: 15%; right: 0; animation-delay: 1s; }
+    .fc-3 { width: 65px; height: 65px; background: var(--green-light); opacity: 0.6; bottom: 5%; left: 30%; animation-delay: 1.5s; font-size: 1.8rem; }
+    .fc-4 { width: 55px; height: 55px; background: var(--cream-dark); border: 2px solid var(--green-pale); top: 60%; left: 0; animation-delay: 2s; font-size: 1.5rem; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+    @keyframes floatMain { 0%,100%{transform:translate(-50%,-50%) translateY(0)} 50%{transform:translate(-50%,-50%) translateY(-14px)} }
+    /* FEATURES */
+    .section { padding: 6rem 5%; }
+    .section-label {
+      font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green-bright); margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      color: var(--green-deep); line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc { color: var(--text-mid); font-size: 1rem; line-height: 1.7; max-width: 500px; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .feature-card {
+      background: white;
+      border: 1px solid rgba(64,145,108,0.12);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green-mid), var(--green-light));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+    .feature-card:hover::before { transform: scaleX(1); }
+    .feature-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--green-pale), rgba(116,198,157,0.3));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem;
+    }
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; color: var(--green-deep); margin-bottom: 0.6rem;
+    }
+    .feature-card p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+    /* HOW IT WORKS */
+    .how-section { background: var(--green-deep); padding: 6rem 5%; color: white; }
+    .how-section .section-label { color: var(--green-light); }
+    .how-section .section-title { color: white; }
+    .how-section .section-desc { color: rgba(255,255,255,0.7); }
+    .steps { display: flex; gap: 0; margin-top: 3rem; flex-wrap: wrap; }
+    .step {
+      flex: 1; min-width: 200px;
+      padding: 1.5rem 2rem;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .step:last-child { border-right: none; }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; font-weight: 900;
+      color: rgba(116,198,157,0.2);
+      line-height: 1; margin-bottom: 1rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    /* CTA */
+    .cta-section {
+      background: linear-gradient(135deg, var(--green-bright) 0%, var(--green-mid) 100%);
+      padding: 5rem 5%;
+      text-align: center; color: white;
+    }
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+    .cta-section p { font-size: 1rem; opacity: 0.85; margin-bottom: 2rem; }
+    .btn-cta {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      background: white; color: var(--green-deep);
+      border-radius: 50px; text-decoration: none;
+      font-weight: 700; font-size: 1rem;
+      transition: all 0.25s;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+    .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.2); }
+    /* FOOTER */
+    footer {
+      background: var(--green-deep);
+      color: rgba(255,255,255,0.6);
+      padding: 2.5rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer .logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: white; }
+    footer p { font-size: 0.85rem; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .hero-visual { display: none; }
+      .nav-links { display: none; }
+      .hero-stats { gap: 1.5rem; }
+      .steps { flex-direction: column; }
+      .step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🥗</div>
+    Healthy<span>Food</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="login.html" class="btn-outline">Log In</a>
+    <a href="register.html" class="btn-solid">Get Started</a>
+  </div>
+</nav>
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-decor"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      AI-Powered Nutrition Intelligence
+    </div>
+    <h1>Analyze Your Food for a <em>Healthier</em> You</h1>
+    <p class="hero-desc">
+      Discover the nutritional value of every meal. Our intelligent system analyzes food compositions,
+      tracks your diet, and guides you toward better eating habits — all in real time.
+    </p>
+    <div class="hero-actions">
+      <a href="register.html" class="btn-hero">Start Analyzing Free →</a>
+      <a href="#how" class="btn-ghost">See how it works ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Foods Analyzed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Accuracy Rate</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">10k+</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="food-circle fc-main">🥗</div>
+    <div class="food-circle fc-1">🥦</div>
+    <div class="food-circle fc-2">🍎</div>
+    <div class="food-circle fc-3">🥕</div>
+    <div class="food-circle fc-4">🍋</div>
+  </div>
+</section>
+ 
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">What We Offer</div>
+  <div class="section-title">Everything You Need to<br>Eat Smart</div>
+  <p class="section-desc">From calorie tracking to micro-nutrient breakdowns — we've got your nutrition covered with deep analysis tools.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔬</div>
+      <h3>Deep Nutritional Analysis</h3>
+      <p>Get detailed breakdowns of calories, macros, vitamins, and minerals for any food item instantly.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Diet Progress Tracking</h3>
+      <p>Monitor your daily intake versus your health goals with beautiful, easy-to-read charts and summaries.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Food Recognition</h3>
+      <p>Upload a photo of your meal and let our AI identify and analyze the food content automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Personalized Goals</h3>
+      <p>Set custom health goals — weight loss, muscle gain, balanced diet — and get tailored recommendations.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Meal Planning</h3>
+      <p>Plan balanced weekly meals based on your nutritional needs, preferences, and health targets.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Smart Alerts</h3>
+      <p>Get notified when you're over or under your daily nutrition targets to stay on track effortlessly.</p>
+    </div>
+  </div>
+</section>
+ 
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-label">The Process</div>
+  <div class="section-title">How It Works</div>
+  <p class="section-desc">Get started in minutes and begin your journey to healthier eating today.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Create Your Account</h3>
+      <p>Sign up with your email and set up your personal health profile in under 2 minutes.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Log Your Meals</h3>
+      <p>Search, scan, or photograph your food to instantly log meals and get nutritional data.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Get Analysis</h3>
+      <p>Our system analyzes your food and gives you actionable insights on your nutrition intake.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Improve &amp; Thrive</h3>
+      <p>Follow personalized recommendations to reach your health goals faster and sustainably.</p>
+    </div>
+  </div>
+</section>
+ 
+<!-- CTA -->
+<section class="cta-section" id="about">
+  <h2>Start Eating Healthier Today</h2>
+  <p>Join thousands of users who've transformed their diet with our powerful analysis tools.</p>
+  <a href="register.html" class="btn-cta">Create Free Account →</a>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="logo">🥗 HealthyFood Analysis System</div>
+  <p>&copy; 2026 Healthy Food Analysis System. All rights reserved.</p>
+  <p>Designed for better nutrition, every day.</p>
+</footer>
+ 
+</body>
+</html>
+ 

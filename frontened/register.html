@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Healthy Food Analysis System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-deep: #1a3a2a;
+      --green-mid: #2d6a4f;
+      --green-bright: #40916c;
+      --green-light: #74c69d;
+      --green-pale: #b7e4c7;
+      --cream: #f8f5ee;
+      --accent: #f4a261;
+      --error: #e63946;
+      --success: #2d6a4f;
+      --text-dark: #1a1a1a;
+      --text-mid: #4a4a4a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: var(--cream);
+      display: flex;
+    }
+    .left-panel {
+      width: 42%;
+      background: linear-gradient(160deg, var(--green-bright) 0%, var(--green-deep) 100%);
+      display: flex; flex-direction: column;
+      justify-content: center; padding: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .left-panel::after {
+      content: '';
+      position: absolute; bottom: -60px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.15);
+    }
+    .left-panel::before {
+      content: '';
+      position: absolute; top: -80px; left: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    }
+    .panel-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: white; margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 10px;
+      position: relative; z-index: 1;
+      text-decoration: none;
+    }
+    .panel-icon {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .panel-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem; line-height: 1.15;
+      color: white; margin-bottom: 1rem;
+      position: relative; z-index: 1;
+    }
+    .panel-heading em { color: var(--green-pale); font-style: normal; }
+    .panel-desc {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.93rem; line-height: 1.7;
+      margin-bottom: 2.5rem;
+      position: relative; z-index: 1;
+    }
+    .benefit-list { list-style: none; position: relative; z-index: 1; }
+    .benefit-list li {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .benefit-list li .b-icon {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; margin-top: 1px;
+    }
+    .right-panel {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 4rem;
+      overflow-y: auto;
+    }
+    .form-box { width: 100%; max-width: 460px; }
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; color: var(--green-deep);
+      margin-bottom: 0.35rem;
+    }
+    .form-subtitle {
+      font-size: 0.88rem; color: var(--text-mid);
+      margin-bottom: 2rem;
+    }
+    .form-subtitle a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+    .progress-bar { display: flex; gap: 6px; margin-bottom: 2rem; }
+    .progress-step {
+      flex: 1; height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+    .progress-step.active { background: var(--green-mid); }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label {
+      display: block;
+      font-size: 0.83rem; font-weight: 600;
+      color: var(--green-deep); margin-bottom: 0.45rem;
+    }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 13px; font-size: 0.95rem; opacity: 0.5; pointer-events: none; }
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%;
+      padding: 0.78rem 1rem 0.78rem 2.7rem;
+      border: 1.5px solid #dde8e4;
+      border-radius: 11px;
+      font-size: 0.92rem; font-family: 'DM Sans', sans-serif;
+      background: white; color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select { padding-left: 2.7rem; cursor: pointer; }
+    input:focus, select:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+    input.error { border-color: var(--error); }
+    .pw-toggle {
+      position: absolute; right: 12px;
+      background: none; border: none;
+      cursor: pointer; font-size: 0.95rem;
+      opacity: 0.5; transition: opacity 0.2s;
+    }
+    .pw-toggle:hover { opacity: 1; }
+    .pw-strength { margin-top: 6px; }
+    .pw-bar { height: 3px; border-radius: 2px; background: #eee; overflow: hidden; }
+    .pw-fill { height: 100%; border-radius: 2px; width: 0; transition: width 0.3s, background 0.3s; }
+    .pw-label { font-size: 0.73rem; color: var(--text-mid); margin-top: 3px; }
+    .field-err {
+      font-size: 0.77rem; color: var(--error);
+      margin-top: 4px; display: none; padding-left: 2px;
+    }
+    .field-err.show { display: block; }
+    .msg {
+      display: none; padding: 0.7rem 1rem;
+      border-radius: 10px; font-size: 0.87rem;
+      margin-bottom: 1rem; align-items: center; gap: 8px;
+    }
+    .msg.error-msg {
+      background: rgba(230,57,70,0.08);
+      border: 1px solid rgba(230,57,70,0.2);
+      color: var(--error);
+    }
+    .msg.success-msg {
+      background: rgba(45,106,79,0.08);
+      border: 1px solid rgba(45,106,79,0.2);
+      color: var(--success);
+    }
+    .msg.show { display: flex; }
+    .terms-wrap {
+      display: flex; gap: 10px; align-items: flex-start;
+      margin-bottom: 1.5rem; font-size: 0.82rem; color: var(--text-mid);
+    }
+    .terms-wrap input[type="checkbox"] {
+      width: 16px; height: 16px;
+      padding: 0; margin-top: 2px;
+      accent-color: var(--green-mid); flex-shrink: 0;
+    }
+    .terms-wrap a { color: var(--green-mid); }
+    .btn-submit {
+      width: 100%; padding: 0.88rem;
+      background: var(--green-mid); color: white;
+      border: none; border-radius: 11px;
+      font-size: 0.98rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 6px 18px rgba(45,106,79,0.25);
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--green-deep);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-spinner {
+      display: none; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite; margin: 0 auto;
+    }
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .btn-spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .login-link { text-align: center; margin-top: 1.3rem; font-size: 0.87rem; color: var(--text-mid); }
+    .login-link a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+    @media (max-width: 768px) {
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <a href="index.html" class="panel-logo">
+    <div class="panel-icon">🥗</div>
+    HealthyFood
+  </a>
+  <h2 class="panel-heading">Start Your<br><em>Nutrition</em> Journey</h2>
+  <p class="panel-desc">Create your free account and get instant access to powerful food analysis tools built for your health.</p>
+  <ul class="benefit-list">
+    <li><span class="b-icon">🔍</span> Analyze any food in seconds</li>
+    <li><span class="b-icon">📈</span> Track your daily nutrition goals</li>
+    <li><span class="b-icon">🎯</span> Get personalized diet recommendations</li>
+    <li><span class="b-icon">🆓</span> Free to get started — no credit card needed</li>
+  </ul>
+</div>
+ 
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-box">
+    <h1 class="form-title">Create Account</h1>
+    <p class="form-subtitle">Already have an account? <a href="login.html">Sign in here</a></p>
+ 
+    <div class="progress-bar">
+      <div class="progress-step active" id="p1"></div>
+      <div class="progress-step" id="p2"></div>
+      <div class="progress-step" id="p3"></div>
+    </div>
+ 
+    <div class="msg error-msg" id="errorMsg">
+      <span>⚠️</span><span id="errorText">An error occurred. Please try again.</span>
+    </div>
+    <div class="msg success-msg" id="successMsg">
+      <span>🎉</span><span id="successText">Account created! Redirecting…</span>
+    </div>
+ 
+    <div class="form-row-2">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="firstName" placeholder="John" oninput="updateProgress()"/>
+        </div>
+        <div class="field-err" id="firstNameErr">Please enter your first name.</div>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="lastName" placeholder="Doe" oninput="updateProgress()"/>
+        </div>
+        <div class="field-err" id="lastNameErr">Please enter your last name.</div>
+      </div>
+    </div>
+ 
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <div class="input-wrap">
+        <span class="input-icon">📧</span>
+        <input type="email" id="email" placeholder="you@example.com" oninput="updateProgress()"/>
+      </div>
+      <div class="field-err" id="emailErr">Please enter a valid email address.</div>
+    </div>
+ 
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="password" placeholder="At least 8 characters" oninput="checkPasswordStrength(); updateProgress()"/>
+        <button class="pw-toggle" type="button" onclick="togglePw('password', this)">👁️</button>
+      </div>
+      <div class="pw-strength">
+        <div class="pw-bar"><div class="pw-fill" id="pwFill"></div></div>
+        <div class="pw-label" id="pwLabel">Enter a password</div>
+      </div>
+      <div class="field-err" id="passwordErr">Password must be at least 8 characters.</div>
+    </div>
+ 
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="confirmPassword" placeholder="Repeat your password"/>
+        <button class="pw-toggle" type="button" onclick="togglePw('confirmPassword', this)">👁️</button>
+      </div>
+      <div class="field-err" id="confirmErr">Passwords do not match.</div>
+    </div>
+ 
+    <div class="form-row-2">
+      <div class="form-group">
+        <label for="age">Age</label>
+        <div class="input-wrap">
+          <span class="input-icon">🎂</span>
+          <input type="text" id="age" placeholder="e.g. 25"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <div class="input-wrap">
+          <span class="input-icon">⚧</span>
+          <select id="gender">
+            <option value="">Select…</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="terms-wrap">
+      <input type="checkbox" id="terms"/>
+      <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of Healthy Food Analysis System.</span>
+    </div>
+ 
+    <button class="btn-submit" id="registerBtn" onclick="handleRegister()">
+      <span class="btn-text">Create My Account →</span>
+      <span class="btn-spinner"></span>
+    </button>
+ 
+    <div class="login-link">Already registered? <a href="login.html">Sign in instead</a></div>
+  </div>
+</div>
+ 
+<script>
+  // ✅ FIXED: Points to your Java Server.java backend
+  const API_BASE = 'http://localhost:8081';
+ 
+  function togglePw(id, btn) {
+    const f = document.getElementById(id);
+    f.type = f.type === 'password' ? 'text' : 'password';
+    btn.textContent = f.type === 'password' ? '👁️' : '🙈';
+  }
+ 
+  function checkPasswordStrength() {
+    const pw = document.getElementById('password').value;
+    const fill = document.getElementById('pwFill');
+    const label = document.getElementById('pwLabel');
+    let strength = 0;
+    if (pw.length >= 8) strength++;
+    if (/[A-Z]/.test(pw)) strength++;
+    if (/[0-9]/.test(pw)) strength++;
+    if (/[^A-Za-z0-9]/.test(pw)) strength++;
+    const levels = [
+      { w: '0%', color: '#eee', text: 'Enter a password' },
+      { w: '25%', color: '#e63946', text: '🔴 Too weak' },
+      { w: '50%', color: '#f4a261', text: '🟠 Fair' },
+      { w: '75%', color: '#74c69d', text: '🟡 Good' },
+      { w: '100%', color: '#2d6a4f', text: '🟢 Strong' },
+    ];
+    fill.style.width = levels[strength].w;
+    fill.style.background = levels[strength].color;
+    label.textContent = strength === 0 ? levels[0].text : levels[strength].text;
+  }
+ 
+  function updateProgress() {
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const em = document.getElementById('email').value.trim();
+    const pw = document.getElementById('password').value;
+    let filled = 0;
+    if (fn && ln) filled++;
+    if (em) filled++;
+    if (pw.length >= 8) filled++;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById(`p${i}`).classList.toggle('active', i <= filled);
+    }
+  }
+ 
+  function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorMsg').classList.add('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+  function showSuccess(msg) {
+    document.getElementById('successText').textContent = msg;
+    document.getElementById('successMsg').classList.add('show');
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+  function clearMsgs() {
+    document.getElementById('errorMsg').classList.remove('show');
+    document.getElementById('successMsg').classList.remove('show');
+  }
+  function setFieldError(fieldId, errId, show) {
+    const f = document.getElementById(fieldId);
+    const e = document.getElementById(errId);
+    f.classList.toggle('error', show);
+    e.classList.toggle('show', show);
+  }
+ 
+  function validate() {
+    let valid = true;
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const password  = document.getElementById('password').value;
+    const confirm   = document.getElementById('confirmPassword').value;
+    const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ 
+    setFieldError('firstName', 'firstNameErr', !firstName);
+    setFieldError('lastName',  'lastNameErr',  !lastName);
+    setFieldError('email',     'emailErr',     !emailRe.test(email));
+    setFieldError('password',  'passwordErr',  password.length < 8);
+    setFieldError('confirmPassword', 'confirmErr', password !== confirm);
+ 
+    if (!firstName || !lastName) valid = false;
+    if (!emailRe.test(email)) valid = false;
+    if (password.length < 8) valid = false;
+    if (password !== confirm) valid = false;
+ 
+    if (!document.getElementById('terms').checked) {
+      showError('Please accept the Terms of Service to continue.');
+      valid = false;
+    }
+    return valid;
+  }
+ 
+  async function handleRegister() {
+    clearMsgs();
+    if (!validate()) return;
+ 
+    const btn = document.getElementById('registerBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+ 
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+ 
+    const payload = {
+       name: firstName + ' ' + lastName,
+       email: document.getElementById('email').value.trim(),
+       password: document.getElementById('password').value
+    };
+ 
+    try {
+      // ✅ FIXED: calls /register on your Java server
+      const response = await fetch(`${API_BASE}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+ 
+      const data = await response.json();
+ 
+      if (data.success) {
+        sessionStorage.setItem('userName', payload.name);
+        sessionStorage.setItem('userEmail', payload.email);
+        showSuccess('🎉 Account created successfully! Redirecting to login…');
+        setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+      } else {
+        showError('❌ ' + (data.message || 'Registration failed. Please try again.'));
+      }
+ 
+    } catch (err) {
+      showError('⚠️ Cannot connect to server. Make sure your Java server is running on port 8081.');
+      console.error('Register error:', err);
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
